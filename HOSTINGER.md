@@ -41,7 +41,7 @@ hPanel men **Environment variables** / **Node.js** → **Environment** mein yeh 
 
 | Key | Example / note |
 |-----|----------------|
-| `DATABASE_URL` | SQLite (recommended): **`file:./prod.db`** — file **`prisma/prod.db`** banegi (Prisma CLI aur Next app dono yahi convention use karte hain). Purana `file:./prisma/prod.db` bhi normalize ho jata hai. Error 14 par absolute try karo: `file:/home/USERNAME/domains/DOMAIN/nodejs/prisma/prod.db`. **`migrate deploy`** app root (`package.json` wali directory) se chalao. |
+| `DATABASE_URL` | **MySQL** (Hostinger shared hosting): `mysql://USER:PASSWORD@HOST:3306/DATABASE` — password men **`@` ko `%40`** se replace karo. Database/User names hPanel jaisay hin (`u430579795_Ramlah` waghera). **`HOST`** aksar **`localhost`** hota hai jab Node app aur MySQL same server par hon; agar connect na ho to Databases → **Remote MySQL** / connection info dekho. |
 | `AUTH_SECRET` | Kam az kam **32 random characters** — ek strong password generator se naya string banao. |
 | `PUBLIC_SITE_URL` | Tumhari live site, **bina** last `/`: `https://ramlahinternational.com` |
 
@@ -103,7 +103,7 @@ Browser se **`https://your-domain.com/admin`** → **Site settings**:
 |--------|--------|
 | **`Cannot find module 'tailwindcss'`** | Hosting kabhi **`npm install --omit=dev`** chala deta hai. Is repo men **Tailwind / PostCSS / TypeScript / Prisma CLI** ab **`dependencies`** men hain ta ke production install par bhi build chale. Latest `main` pull karke dubara deploy karo. |
 | **`ESLint must be installed`** | **`eslint`** aur **`eslint-config-next`** ab **`dependencies`** men hain ta ke build-time lint chale. |
-| **`SQLite Error code 14` during `next build`** | Build server par aksar DB file writable nahi hoti. Site layout **`force-dynamic`** hai ta ke **`next build`** SQLite ko touch na kare — **`migrate deploy`** aur **`db:seed` runtime par** (deploy ke baad SSH se) chalao. |
+| **`SQLite Error code 14`** | Purana SQLite setup — ab project **MySQL** use karta hai; **`DATABASE_URL`** ko Hostinger MySQL URL set karo (niche). |
 | **`Can't resolve '@/lib/...'`** | Aksar Tailwind / TS missing ki wajah se build adhuri hoti hai — upar wala fix ke baad theek ho jata hai. |
 | Build fail — Prisma | `DATABASE_URL` build time par set hai? |
 | `Can't reach database` | Path writable hai? SQLite ke liye `prisma` folder permissions |

@@ -1,11 +1,11 @@
-// Ramlah platform — SQLite dev (use Postgres URL in production)
+// Ramlah platform — MySQL on Hostinger (shared hosting)
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -22,7 +22,7 @@ model AdminUser {
 model SiteSetting {
   id        String   @id @default(cuid())
   key       String   @unique
-  value     String
+  value     String   @db.Text
   updatedAt DateTime @updatedAt
 }
 
@@ -30,8 +30,8 @@ model Job {
   id           String           @id @default(cuid())
   title        String
   slug         String           @unique
-  summary      String?
-  description  String?
+  summary      String?          @db.Text
+  description  String?          @db.Text
   country      String?
   sector       String?
   salaryHint   String?
@@ -54,12 +54,12 @@ model JobApplication {
   phone           String
   cnic            String?
   category        String?
-  message         String?
+  message         String?       @db.Text
   experienceYears Int?
   expectedSalary  String?
   availableFrom   DateTime?
-  skills          String?
-  coverLetter     String?
+  skills          String?       @db.Text
+  coverLetter     String?       @db.Text
   cvPath          String?
   photoPath       String?
   status          String   @default("RECEIVED")
@@ -76,8 +76,8 @@ model EmployerInquiry {
   country       String?
   workersNeeded String?
   sector        String?
-  message       String?
-  internalNote  String?
+  message       String?       @db.Text
+  internalNote  String?       @db.Text
   status        String   @default("NEW")
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -87,11 +87,11 @@ model BlogPost {
   id              String    @id @default(cuid())
   title           String
   slug            String    @unique
-  excerpt         String?
-  content         String
+  excerpt         String?   @db.Text
+  content         String    @db.Text
   status          String    @default("DRAFT")
   metaTitle       String?
-  metaDescription String?
+  metaDescription String?   @db.Text
   publishedAt     DateTime?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
@@ -103,7 +103,7 @@ model Country {
   slug      String  @unique
   code      String  @unique
   active    Boolean @default(true)
-  blurb     String?
+  blurb     String?   @db.Text
   lat       Float
   lng       Float
   sortOrder Int     @default(0)

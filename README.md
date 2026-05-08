@@ -1,6 +1,6 @@
 # Ramlah Platform (Next.js + Prisma)
 
-Full-stack foundation: **elite public site**, **REST-style JSON APIs**, **SQLite database** (swap to Postgres in production), and a **staff admin dashboard** with login.
+Full-stack foundation: **elite public site**, **REST-style JSON APIs**, **MySQL database** (Prisma — Hostinger-friendly), and a **staff admin dashboard** with login.
 
 ## What you get
 
@@ -36,8 +36,8 @@ npm run dev
 
 ## Database
 
-- **Local:** SQLite file `dev.db` in project root (gitignored).
-- **Production:** Set `DATABASE_URL` to Postgres (e.g. Neon, Supabase, RDS) and run `npx prisma migrate deploy`.
+- **Production / Hostinger:** MySQL — `DATABASE_URL="mysql://USER:PASSWORD@HOST:3306/DATABASE"` (encode `@` in password as `%40`). Run `npx prisma migrate deploy` then `npm run db:seed`.
+- **Local dev:** Same shape URL pointing at a local MySQL/MariaDB instance (Docker/XAMPP), or temporary tunnel to your Hostinger DB if remote access is enabled.
 
 ## Deploy on Hostinger (Git import)
 

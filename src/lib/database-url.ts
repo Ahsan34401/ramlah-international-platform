@@ -3,12 +3,9 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 /**
- * SQLite URL resolution aligned with Prisma CLI: relative paths use the **prisma/** schema folder
- * as base (same as `schema.prisma` location). Absolute `file:` URLs pass through.
+ * MySQL / Postgres URLs pass through unchanged.
  *
- * Examples:
- * - `file:./prod.db` → `{cwd}/prisma/prod.db`
- * - `file:./prisma/prod.db` → `{cwd}/prisma/prod.db` (legacy Hostinger paste — normalized)
+ * SQLite-only (legacy): relative `file:` paths resolve against the **prisma/** folder.
  */
 export function resolveDatabaseUrl(): string {
   const rawEnv = process.env.DATABASE_URL?.trim().replace(/^["']|["']$/g, "") ?? "";
