@@ -33,6 +33,8 @@ Pehli baar deploy ke baad agar database tables na hon to niche “Database pehli
 
 ## 3) Environment variables (zaroori)
 
+**Turant paste:** project men dekho **`hostinger-env-PASTE.example.env`** (template), ya locally **`hostinger-env-paste.env`** — Hostinger UI men har line **KEY** = left, **VALUE** = right (khali SMTP values add na karo agar panel allow kare).
+
 hPanel men **Environment variables** / **Node.js** → **Environment** mein yeh add karo (values **apni** likho):
 
 ### Zaroori

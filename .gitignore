@@ -34,6 +34,9 @@ yarn-error.log*
 .env*
 !.env.example
 
+# Local paste-ready secrets for Hostinger (never commit)
+/hostinger-env-paste.env
+
 # local sqlite
 /dev.db
 /dev.db-journal
