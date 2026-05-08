@@ -5,6 +5,9 @@ import { WhatsAppFloat } from "@/components/whatsapp-float";
 import { getTawkIds } from "@/lib/integrations";
 import { getPublicSiteSettings } from "@/lib/site-settings";
 
+/** Hostinger `next build` has no writable SQLite file; skip DB access until runtime. */
+export const dynamic = "force-dynamic";
+
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   const settings = await getPublicSiteSettings();
   const tawk = await getTawkIds();

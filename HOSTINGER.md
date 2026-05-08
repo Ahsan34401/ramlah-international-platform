@@ -102,6 +102,8 @@ Browser se **`https://your-domain.com/admin`** → **Site settings**:
 | Problem | Check |
 |--------|--------|
 | **`Cannot find module 'tailwindcss'`** | Hosting kabhi **`npm install --omit=dev`** chala deta hai. Is repo men **Tailwind / PostCSS / TypeScript / Prisma CLI** ab **`dependencies`** men hain ta ke production install par bhi build chale. Latest `main` pull karke dubara deploy karo. |
+| **`ESLint must be installed`** | **`eslint`** aur **`eslint-config-next`** ab **`dependencies`** men hain ta ke build-time lint chale. |
+| **`SQLite Error code 14` during `next build`** | Build server par aksar DB file writable nahi hoti. Site layout **`force-dynamic`** hai ta ke **`next build`** SQLite ko touch na kare — **`migrate deploy`** aur **`db:seed` runtime par** (deploy ke baad SSH se) chalao. |
 | **`Can't resolve '@/lib/...'`** | Aksar Tailwind / TS missing ki wajah se build adhuri hoti hai — upar wala fix ke baad theek ho jata hai. |
 | Build fail — Prisma | `DATABASE_URL` build time par set hai? |
 | `Can't reach database` | Path writable hai? SQLite ke liye `prisma` folder permissions |

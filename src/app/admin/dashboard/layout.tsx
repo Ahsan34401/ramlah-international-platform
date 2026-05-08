@@ -3,6 +3,9 @@ import { redirect } from "next/navigation";
 import { getAdminSession } from "@/lib/auth";
 import { LogoutButton } from "./logout-button";
 
+/** Avoid Prisma during static generation / CI builds (no DB file yet). */
+export const dynamic = "force-dynamic";
+
 const nav = [
   { href: "/admin/dashboard", label: "Overview" },
   { href: "/admin/dashboard/jobs", label: "Jobs" },
