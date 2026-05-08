@@ -41,7 +41,7 @@ hPanel men **Environment variables** / **Node.js** → **Environment** mein yeh 
 
 | Key | Example / note |
 |-----|----------------|
-| `DATABASE_URL` | SQLite ke liye: `file:./prisma/prod.db` (single server OK). Baad men Postgres par shift kar sakte ho. |
+| `DATABASE_URL` | SQLite: `file:./prisma/prod.db` — app ab is path ko **`process.cwd()` se absolute** banata hai aur folder banane ki koshish karta hai. Agar phir bhi error 14 aaye to Hostinger Node app root ka **absolute** URL lagao, maslan: `file:/home/u430579795/domains/ramlahinternational.com/nodejs/prisma/prod.db` (username/path apne panel se verify karo). **`npx prisma migrate deploy`** hamesha **usi folder se** chalao jahan `package.json` hai (Node.js app root). |
 | `AUTH_SECRET` | Kam az kam **32 random characters** — ek strong password generator se naya string banao. |
 | `PUBLIC_SITE_URL` | Tumhari live site, **bina** last `/`: `https://ramlahinternational.com` |
 
