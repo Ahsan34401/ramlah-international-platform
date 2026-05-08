@@ -1,7 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { resolveDatabaseUrl } from "../src/lib/database-url";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  datasources: {
+    db: { url: resolveDatabaseUrl() },
+  },
+});
 
 function genRef(year: number): string {
   const n = Math.floor(10000 + Math.random() * 90000);
