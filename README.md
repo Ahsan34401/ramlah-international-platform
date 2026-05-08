@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ramlah Platform (Next.js + Prisma)
 
-## Getting Started
+Full-stack foundation: **elite public site**, **REST-style JSON APIs**, **SQLite database** (swap to Postgres in production), and a **staff admin dashboard** with login.
 
-First, run the development server:
+## What you get
+
+| Area | Path | Purpose |
+|------|------|---------|
+| Public site | `/`, `/jobs`, `/jobs/[slug]` | Marketing + filters + featured jobs + apply with **CV/photo upload** |
+| Track application | `/track-application` | **Reference + email** lookup (OEC-style pipeline steps) |
+| Employer leads | Homepage form → `POST /api/public/inquiries` | `EmployerInquiry` + **internal notes** + extended statuses |
+| Applications | Multipart `POST /api/public/applications` | **`RI-YYYY-#####` reference**, full fields, files under `/uploads` |
+| Jobs API | `GET /api/public/jobs` | JSON (published, non-expired, featured first) |
+| Public settings | `GET /api/public/settings` | WhatsApp + license strings for widgets |
+| Staff login | `/admin/login` | JWT in httpOnly cookie |
+| Dashboard | `/admin/dashboard` | Jobs **edit/duplicate/delete**, applications **detail + CSV**, inquiries **CSV**, **site settings** |
+| Exports | `GET /api/admin/export/applications` (and `.../inquiries`) | CSV (requires staff session cookie) |
+| File download | `GET /api/admin/applications/[id]/file?t=cv|photo` | Staff-only CV/photo |
+
+Reference patterns in your PRD mirror **jobs.oec.gov.pk** (search/filter, apply, track by ID). For pixel-perfect clone of another URL, share that link and we can align layout/components.
+
+## Quick start (Windows / macOS / Linux)
 
 ```bash
+cd platform
+cp .env.example .env
+# Edit AUTH_SECRET to a long random string
+npm install
+npx prisma migrate dev
+npx tsx prisma/seed.ts
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Open **http://localhost:3000** — public site  
+- Open **http://localhost:3000/admin/login** — default seed user from `.env` (`ADMIN_SEED_EMAIL` / `ADMIN_SEED_PASSWORD`)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Database
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Local:** SQLite file `dev.db` in project root (gitignored).
+- **Production:** Set `DATABASE_URL` to Postgres (e.g. Neon, Supabase, RDS) and run `npx prisma migrate deploy`.
 
-## Learn More
+## Relation to WordPress
 
-To learn more about Next.js, take a look at the following resources:
+The existing WordPress theme in `../wp-content/` can stay for hosted marketing if needed. This `platform` app is the **recommended** place for real operational data (jobs, applications, inquiries) and a proper admin UI. You can:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Point DNS for `app.ramlah…` to Vercel/Node hosting for this Next app, or  
+- Replace WP entirely once content is migrated.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Scripts
 
-## Deploy on Vercel
+- `npm run dev` — development server  
+- `npm run build` — production build (`prisma generate` + `next build`)  
+- `npm run db:studio` — Prisma Studio (browse tables)  
+- `npm run db:migrate` — create/apply migrations  
+- `npm run db:seed` — ensure admin user + sample jobs  
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Security notes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Change seed password immediately in production; create additional `AdminUser` rows via Prisma Studio or a one-off script.
+- Set `AUTH_SECRET` to a strong value (32+ bytes random).
+- Use HTTPS in production so the admin cookie is sent with `Secure`.

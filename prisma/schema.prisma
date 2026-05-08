@@ -1,0 +1,112 @@
+// Ramlah platform — SQLite dev (use Postgres URL in production)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  role         String   @default("STAFF")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+model Job {
+  id           String           @id @default(cuid())
+  title        String
+  slug         String           @unique
+  summary      String?
+  description  String?
+  country      String?
+  sector       String?
+  salaryHint   String?
+  status       String           @default("DRAFT")
+  featured     Boolean          @default(false)
+  expiresAt    DateTime?
+  publishedAt  DateTime?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  applications JobApplication[]
+}
+
+model JobApplication {
+  id              String   @id @default(cuid())
+  referenceCode   String?  @unique
+  jobId           String?
+  job             Job?     @relation(fields: [jobId], references: [id], onDelete: SetNull)
+  fullName        String
+  email           String
+  phone           String
+  cnic            String?
+  category        String?
+  message         String?
+  experienceYears Int?
+  expectedSalary  String?
+  availableFrom   DateTime?
+  skills          String?
+  coverLetter     String?
+  cvPath          String?
+  photoPath       String?
+  status          String   @default("RECEIVED")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model EmployerInquiry {
+  id            String   @id @default(cuid())
+  companyName   String
+  contactName   String
+  email         String
+  phone         String
+  country       String?
+  workersNeeded String?
+  sector        String?
+  message       String?
+  internalNote  String?
+  status        String   @default("NEW")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model BlogPost {
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  excerpt         String?
+  content         String
+  status          String    @default("DRAFT")
+  metaTitle       String?
+  metaDescription String?
+  publishedAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Country {
+  id        String  @id @default(cuid())
+  name      String
+  slug      String  @unique
+  code      String  @unique
+  active    Boolean @default(true)
+  blurb     String?
+  lat       Float
+  lng       Float
+  sortOrder Int     @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

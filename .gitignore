@@ -33,9 +33,19 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# local sqlite
+/dev.db
+/dev.db-journal
+/prisma/dev.db
+/prisma/dev.db-journal
+
+# uploaded CVs / photos
+/uploads
+
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
