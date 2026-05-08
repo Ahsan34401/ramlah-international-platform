@@ -101,6 +101,8 @@ Browser se **`https://your-domain.com/admin`** → **Site settings**:
 
 | Problem | Check |
 |--------|--------|
+| **`Cannot find module 'tailwindcss'`** | Hosting kabhi **`npm install --omit=dev`** chala deta hai. Is repo men **Tailwind / PostCSS / TypeScript / Prisma CLI** ab **`dependencies`** men hain ta ke production install par bhi build chale. Latest `main` pull karke dubara deploy karo. |
+| **`Can't resolve '@/lib/...'`** | Aksar Tailwind / TS missing ki wajah se build adhuri hoti hai — upar wala fix ke baad theek ho jata hai. |
 | Build fail — Prisma | `DATABASE_URL` build time par set hai? |
 | `Can't reach database` | Path writable hai? SQLite ke liye `prisma` folder permissions |
 | Port | Hostinger aksar `PORT` set karta hai — Next.js `npm run start` ise use kar leta hai |
