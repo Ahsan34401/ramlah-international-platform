@@ -15,6 +15,5 @@ function createPrisma(): PrismaClient {
 
 export const prisma = globalForPrisma.prisma ?? createPrisma();
 
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-}
+/** Reuse one client per Node process (build + Hostinger); avoids extra pools in prod. */
+globalForPrisma.prisma = prisma;

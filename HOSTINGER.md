@@ -5,6 +5,19 @@ Import ke baad yeh fields / env almost har jagah same logic follow karti hain; a
 
 ---
 
+## 0) Agar site **500** de aur browser console men fetch fail ho
+
+1. **`u430579795_Ramlah` database ka naam hai**, hostname **nahi**. Hostinger Node app usually **`localhost`** use karti hai (same server par MySQL).
+2. **`DATABASE_URL`** exact shape:
+   ```txt
+   mysql://MYSQL_USER:MYSQL_PASSWORD@localhost:3306/u430579795_Ramlah
+   ```
+   Password men **`@` → `%40`** (baqi special chars bhi URL-encode).
+3. Deploy ke baad **SSH** se app root men **`npx prisma migrate deploy`** zaroor — bina is ke tables nahi hotin → **500**.
+4. Check: browser men kholo **`https://ramlahinternational.com/api/public/health`** — `{ ok: true, db: true }` hona chahiye.
+
+---
+
 ## 1) Git se connect karo
 
 1. **hPanel** → **Websites** → **ramlahinternational.com** (ya jis domain par Node app chala rahe ho).
