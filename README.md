@@ -39,12 +39,9 @@ npm run dev
 - **Local:** SQLite file `dev.db` in project root (gitignored).
 - **Production:** Set `DATABASE_URL` to Postgres (e.g. Neon, Supabase, RDS) and run `npx prisma migrate deploy`.
 
-## Relation to WordPress
+## Deploy on Hostinger (Git import)
 
-The existing WordPress theme in `../wp-content/` can stay for hosted marketing if needed. This `platform` app is the **recommended** place for real operational data (jobs, applications, inquiries) and a proper admin UI. You can:
-
-- Point DNS for `app.ramlah…` to Vercel/Node hosting for this Next app, or  
-- Replace WP entirely once content is migrated.
+GitHub repo push/import ke baad turant-yaad checklist **[`HOSTINGER.md`](./HOSTINGER.md)** men hai — build/start commands, env variables, `prisma migrate deploy`, aur seed.
 
 ## Scripts
 
