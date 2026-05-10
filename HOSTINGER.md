@@ -87,10 +87,10 @@ hPanel men **Environment variables** / **Node.js** → **Environment** mein yeh 
 
 Build/deploy successful hone ke baad database tables banani hain:
 
-**Option A — SSH mile:** project folder men:
+**Option A — SSH mile:** project folder men (local **`package.json` wala Prisma** use ho — bare **`npx prisma`** na chalao jab tak **`npm install`** ho chuka ho):
 
 ```bash
-npx prisma migrate deploy
+npm run db:deploy
 npm run db:seed
 ```
 
@@ -102,16 +102,28 @@ npm run db:seed
    `export PATH="/opt/alt/alt-nodejs22/root/usr/bin:$PATH"`
    (version folder Hostinger panel men jo dikhe wahi use karo.)
 
-2. **Latest code:** `git pull origin main` — ta ke **`package-lock.json`** repo se aa jaye (agar sirf `package.json` copy kiya ho to `npm ci` fail ho ga).
+2. **Latest code:**  
+   - Agar **`fatal: not a git repository`** aaye to tumhara folder **FTP / manual upload** hai — **`git pull` yahan kaam nahi kare ga.**  
+   - Fix (ek choose karo):  
+     - **hPanel** men site ko **Git** se **repo connect** karo ta ke deploy poori repo (**`package-lock.json`** samet) utare; **ya**  
+     - SSH par backup karke **fresh clone:**  
+       `cd ~/domains/ramlahinternational.com && mv nodejs nodejs-old-$(date +%Y%m%d) && git clone https://github.com/Ahsan34401/ramlah-international-platform.git nodejs`  
+       Phir purani **`nodejs-old-*/.env`** (agar hai) copy kar lo nayi **`nodejs/.env`** men — ya panel ki values dubara likho.  
+   - Git repo hai to: **`git pull origin main`** ta ke **`package-lock.json`** aa jaye.
 
-3. **Dependencies:** `npm install`  
+3. **`DATABASE_URL` SSH men:** hPanel men jo env vars hain wo **interactive SSH shell men kabhi auto-load nahi hotin.** Prisma ke liye app root men **`./.env`** banao (jahan `package.json` / `prisma/schema.prisma` hai) aur kam az kam yeh line ho:  
+   `DATABASE_URL="mysql://USER:PASSWORD@localhost:3306/u430579795_Ramlah"`  
+   (password men **`@` → `%40`**.) Prisma CLI is file ko read karti hai. **`npm run db:deploy`** se pehle ye zaroori hai.
+
+4. **Dependencies:** `npm install`  
    - **`npm ci`** sirf tab jab **`package-lock.json`** mojood ho.  
    - **`npm install` ke baghair** agar `npx prisma` chalao to npm globally/latest Prisma (e.g. **7.x**) utha leta hai aur **`schema.prisma` men `url` par P1012** aa sakta hai — project men **Prisma 5** hai.
+   - Agar **`postinstall` / `prisma generate`** par **`@prisma/client/generator-build/index.js` MODULE_NOT_FOUND** aaye to **`node_modules` adhuri / corrupt** hai — **`rm -rf node_modules`** karke dubara **`npm install`** chalao (quota full na ho check karo).
 
-4. **Migrate:** `npm run db:deploy` **ya** `./node_modules/.bin/prisma migrate deploy`  
+5. **Migrate:** `npm run db:deploy` **ya** `./node_modules/.bin/prisma migrate deploy`  
    Bare `npx prisma ...` avoid karo jab tak `node_modules` poora install na ho.
 
-5. **Seed:** `npm run db:seed` — **`Cannot find module 'bcryptjs'`** ka matlab aksar **step 3 skip** (dependencies install nahi).
+6. **Seed:** `npm run db:seed` — **`Cannot find module 'bcryptjs'`** ka matlab aksar **dependencies install poori nahi** (step **4**).
 
 Seed ke baad login:  
 `/admin/login` — `ADMIN_SEED_EMAIL` / `ADMIN_SEED_PASSWORD`.
@@ -134,7 +146,10 @@ Browser se **`https://your-domain.com/admin`** → **Site settings**:
 
 | Problem | Check |
 |--------|--------|
-| **`npm ci` — no package-lock.json** | `git pull` karo ta ke lockfile aaye, ya **`npm install`** use karo. |
+| **`fatal: not a git repository`** | Folder **manual/FTP** hai — **`git pull` nahi.** **Git deploy** panel se connect karo ya SSH par **`git clone`** (niche SSH section). |
+| **`npm ci` — no package-lock.json** | **`git clone` / Git deploy** se lockfile lao, ya **`npm install`** (lockfile ke baghair). |
+| **`Environment variable not found: DATABASE_URL`** (SSH) | SSH shell men panel vars load nahi hotay — app root men **`./.env`** banao **`DATABASE_URL=`** ke saath (niche SSH step **3**). |
+| **`generator-build/index.js` MODULE_NOT_FOUND** (`prisma generate`) | **`rm -rf node_modules`** → **`npm install`** dubara; aksar **adhuri install** ya quota/inodes issue. |
 | **Prisma P1012 — `url` no longer supported** | Global **`npx prisma`** ne Prisma **7** chala di; pehle **`npm install`**, phir **`npm run db:deploy`** (local Prisma **5**). |
 | **`Cannot find module 'bcryptjs'`** | **`npm install`** dubara chalao (dependencies poori hon). |
 | **`Cannot find module 'tailwindcss'`** | Hosting kabhi **`npm install --omit=dev`** chala deta hai. Is repo men **Tailwind / PostCSS / TypeScript / Prisma CLI** ab **`dependencies`** men hain ta ke production install par bhi build chale. Latest `main` pull karke dubara deploy karo. |
