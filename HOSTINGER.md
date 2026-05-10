@@ -3,6 +3,8 @@
 Repo: **https://github.com/Ahsan34401/ramlah-international-platform**  
 Import ke baad yeh fields / env almost har jagah same logic follow karti hain; agar hPanel men exact naam thora alag ho to **Environment variables** / **Advanced** section dhondh lena.
 
+**Important:** Cursor / AI **tumhari jagah Hostinger hPanel login NAHI kar sakta** — aur **Hostinger MCP men env vars set karne wala tool NAHI** hai. Tumhari machine par repo men **`hostinger-env-paste.env`** (gitignored) poori values ke saath rakho — **wahi lines panel men copy-paste** karo.
+
 ---
 
 ## 0) Agar site **500** de aur browser console men fetch fail ho
@@ -15,6 +17,7 @@ Import ke baad yeh fields / env almost har jagah same logic follow karti hain; a
    Password men **`@` → `%40`** (baqi special chars bhi URL-encode).
 3. Deploy ke baad **SSH** se app root men **`npx prisma migrate deploy`** zaroor — bina is ke tables nahi hotin → **500**.
 4. Check: browser men kholo **`https://ramlahinternational.com/api/public/health`** — `{ ok: true, db: true }` hona chahiye.
+5. Browser men generic **“Server Components render… digest”** message normal hai — Next.js production men poori error hide karta hai; **real error Hostinger Node logs / stderr** men dekho; site men **`/api/public/health`** aur **digest** number logs se match kar sakte ho.
 
 ---
 

@@ -17,14 +17,25 @@ export type PublicSiteSettings = {
 };
 
 export async function getPublicSiteSettings(): Promise<PublicSiteSettings> {
-  const rows = await prisma.siteSetting.findMany();
-  const map = new Map(rows.map((r) => [r.key, r.value]));
-  const get = (k: keyof typeof DEFAULTS) => map.get(k) ?? DEFAULTS[k];
-  return {
-    whatsappE164: get("whatsapp_e164"),
-    phoneDisplay: get("phone_display"),
-    licenseDisplay: get("license_display"),
-    waMsgEmployer: get("wa_msg_employer"),
-    waMsgJobseeker: get("wa_msg_jobseeker"),
-  };
+  try {
+    const rows = await prisma.siteSetting.findMany();
+    const map = new Map(rows.map((r) => [r.key, r.value]));
+    const get = (k: keyof typeof DEFAULTS) => map.get(k) ?? DEFAULTS[k];
+    return {
+      whatsappE164: get("whatsapp_e164"),
+      phoneDisplay: get("phone_display"),
+      licenseDisplay: get("license_display"),
+      waMsgEmployer: get("wa_msg_employer"),
+      waMsgJobseeker: get("wa_msg_jobseeker"),
+    };
+  } catch (e) {
+    console.error("[getPublicSiteSettings] DB unavailable — using defaults.", e);
+    return {
+      whatsappE164: DEFAULTS.whatsapp_e164,
+      phoneDisplay: DEFAULTS.phone_display,
+      licenseDisplay: DEFAULTS.license_display,
+      waMsgEmployer: DEFAULTS.wa_msg_employer,
+      waMsgJobseeker: DEFAULTS.wa_msg_jobseeker,
+    };
+  }
 }
