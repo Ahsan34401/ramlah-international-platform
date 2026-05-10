@@ -96,6 +96,23 @@ npm run db:seed
 
 **Option B — SSH na ho:** Hostinger men kabhi **Run npm script** / **Terminal** hota hai — wahan same commands.
 
+### SSH par migrate / seed — order (important)
+
+1. **Node PATH:** Alt NodeJS install ho to pehle path add karo, warnah `npm`/`node` nahi mile ga:
+   `export PATH="/opt/alt/alt-nodejs22/root/usr/bin:$PATH"`
+   (version folder Hostinger panel men jo dikhe wahi use karo.)
+
+2. **Latest code:** `git pull origin main` — ta ke **`package-lock.json`** repo se aa jaye (agar sirf `package.json` copy kiya ho to `npm ci` fail ho ga).
+
+3. **Dependencies:** `npm install`  
+   - **`npm ci`** sirf tab jab **`package-lock.json`** mojood ho.  
+   - **`npm install` ke baghair** agar `npx prisma` chalao to npm globally/latest Prisma (e.g. **7.x**) utha leta hai aur **`schema.prisma` men `url` par P1012** aa sakta hai — project men **Prisma 5** hai.
+
+4. **Migrate:** `npm run db:deploy` **ya** `./node_modules/.bin/prisma migrate deploy`  
+   Bare `npx prisma ...` avoid karo jab tak `node_modules` poora install na ho.
+
+5. **Seed:** `npm run db:seed` — **`Cannot find module 'bcryptjs'`** ka matlab aksar **step 3 skip** (dependencies install nahi).
+
 Seed ke baad login:  
 `/admin/login` — `ADMIN_SEED_EMAIL` / `ADMIN_SEED_PASSWORD`.
 
@@ -117,6 +134,9 @@ Browser se **`https://your-domain.com/admin`** → **Site settings**:
 
 | Problem | Check |
 |--------|--------|
+| **`npm ci` — no package-lock.json** | `git pull` karo ta ke lockfile aaye, ya **`npm install`** use karo. |
+| **Prisma P1012 — `url` no longer supported** | Global **`npx prisma`** ne Prisma **7** chala di; pehle **`npm install`**, phir **`npm run db:deploy`** (local Prisma **5**). |
+| **`Cannot find module 'bcryptjs'`** | **`npm install`** dubara chalao (dependencies poori hon). |
 | **`Cannot find module 'tailwindcss'`** | Hosting kabhi **`npm install --omit=dev`** chala deta hai. Is repo men **Tailwind / PostCSS / TypeScript / Prisma CLI** ab **`dependencies`** men hain ta ke production install par bhi build chale. Latest `main` pull karke dubara deploy karo. |
 | **`ESLint must be installed`** | **`eslint`** aur **`eslint-config-next`** ab **`dependencies`** men hain ta ke build-time lint chale. |
 | **`SQLite Error code 14`** | Purana SQLite setup — ab project **MySQL** use karta hai; **`DATABASE_URL`** ko Hostinger MySQL URL set karo (niche). |
@@ -133,7 +153,7 @@ Browser se **`https://your-domain.com/admin`** → **Site settings**:
 - [ ] Git repo + branch `main` connected  
 - [ ] Install / build / start commands set  
 - [ ] `DATABASE_URL`, `AUTH_SECRET`, `PUBLIC_SITE_URL` set  
-- [ ] `ADMIN_SEED_*` set → migrate deploy → seed  
+- [ ] `ADMIN_SEED_*` set → `npm run db:deploy` → `npm run db:seed`  
 - [ ] Login karke password change + Site settings  
 
 Import kar lo — phir agar koi screen ka screenshot / exact error message ho to bhej dena, us hisaab se next step bata den ge.
